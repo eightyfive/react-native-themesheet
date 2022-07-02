@@ -1,7 +1,7 @@
 {
   "name": "react-native-themesheet",
   "version": "0.0.1",
-  "description": "Themed stylesheet",
+  "description": "Themed StyleSheet",
   "keywords": [
     "react-native",
     "react-native-stylesheet",

@@ -1,15 +1,11 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 import _mapValues from 'lodash.mapvalues';
-import { BoxBaseProps, BoxProps, Sizes } from './types';
+import { BoxProps, Sizes } from './types';
 import { getBoxStyle } from './utils';
-import { ComponentType } from 'react';
 
 export function createCreateBox<S extends Sizes>(sizes: S) {
-  return function createBox<P extends BoxBaseProps>(
-    BaseComponent: ComponentType<any>,
-  ) {
+  return function createBox<Props>(Component: ComponentType<any>) {
     return ({
-      style: styleProp,
       m,
       mt,
       mr,
@@ -30,8 +26,8 @@ export function createCreateBox<S extends Sizes>(sizes: S) {
       ps,
       pe,
       ...rest
-    }: P & BoxProps<typeof sizes>) => {
-      const style = getBoxStyle<typeof sizes>(
+    }: Props & BoxProps<S>) => {
+      const style = getBoxStyle<S>(
         {
           m,
           mt,
@@ -56,7 +52,7 @@ export function createCreateBox<S extends Sizes>(sizes: S) {
         sizes,
       );
 
-      return <BaseComponent {...rest} style={[style, styleProp]} />;
+      return <Component {...rest} style={[style, (rest as any).style]} />;
     };
   };
 }

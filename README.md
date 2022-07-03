@@ -12,7 +12,7 @@ yarn add react-native-themesheet
 
 ### Create theme
 
-A "Theme" consist of a set of `colors` & a set of `sizes`.
+A Theme consist of a set of `colors` & a set of `sizes`.
 
 ```ts
 // src/views/theme.ts
@@ -266,14 +266,14 @@ type FlexStyle = {
 type SpacingStyle<S extends Sizes> = Partial<Record<SpacingProp, keyof S>>;
 ```
 
-The following "color" properties will only accepts color names from the "Theme":
+The following "color" properties will only accepts color names from the Theme:
 
 - `backgroundColor`
 - `borderColor`
 - `color`
 - `tintColor`
 
-Finally `borderRadius` accepts both a size name from the "Theme", as well as a normal `number` value.
+Finally `borderRadius` accepts both a size name from the Theme, as well as a normal `number` value.
 
 ```ts
 import { createStyles } from './theme';

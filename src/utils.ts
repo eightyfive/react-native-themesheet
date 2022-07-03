@@ -27,7 +27,7 @@ export const aliasToProp: Record<SpacingProp, SpacingName> = {
   pe: 'paddingEnd',
 };
 
-const sheets = new Map();
+const sheets = new Map<string, RNViewStyle>();
 
 export function getBoxStyle<S extends Sizes>(props: BoxProps<S>, sizes: S) {
   const cacheKey = JSON.stringify(props);

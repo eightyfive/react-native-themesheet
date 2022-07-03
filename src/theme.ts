@@ -60,6 +60,9 @@ type NamedStyles<S extends Sizes, C extends Colors, T> = {
 };
 
 export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
+  //
+  // createStyles
+  //
   function createStyles<
     T extends
       | NamedStyles<TT['sizes'], TT['colors'], T>
@@ -145,6 +148,9 @@ export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
     );
   }
 
+  //
+  // createVariants
+  //
   function createVariants<
     V extends
       | NamedStyles<TT['sizes'], TT['colors'], V>
@@ -156,25 +162,28 @@ export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
     variants: V | NamedStyles<TT['sizes'], TT['colors'], V>,
     modifiers: M | NamedStyles<TT['sizes'], TT['colors'], M>,
   ) {
-    const variantStyles = createStyles(variants);
-    const modifierStyles = createStyles(modifiers);
+    const vStyles = createStyles(variants);
+    const mStyles = createStyles(modifiers);
 
     return function (
-      variant: keyof typeof variantStyles,
-      modifier: Partial<Record<keyof typeof modifierStyles, boolean>>,
+      variant: keyof typeof vStyles,
+      modifier: Partial<Record<keyof typeof mStyles, boolean>>,
     ) {
-      const res = [variantStyles[variant]];
+      const styles = [vStyles[variant]];
 
       for (let mod in modifier) {
         if (modifier[mod]) {
-          res.push(modifierStyles[mod]);
+          styles.push(mStyles[mod]);
         }
       }
 
-      return res;
+      return styles;
     };
   }
 
+  //
+  // API
+  //
   return {
     colors,
     sizes,

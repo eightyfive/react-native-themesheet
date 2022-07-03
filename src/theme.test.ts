@@ -104,13 +104,19 @@ test('createVariants', () => {
     },
   );
 
-  const styles = $('primary', { disabled: true });
-
-  expect(styles).toEqual([
+  expect($('primary', { compact: true, disabled: true })).toEqual([
     {
       backgroundColor: colors.onPrimary,
       borderColor: colors.onPrimary,
     },
+    { paddingHorizontal: sizes.s },
     { opacity: 0.75 },
+  ]);
+
+  expect($('accent', { compact: false })).toEqual([
+    {
+      backgroundColor: colors.accent,
+      borderColor: colors.accent,
+    },
   ]);
 });

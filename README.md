@@ -173,14 +173,14 @@ Later in app:
 ```ts
 // src/views/header.tsx
 
-import { Row, Text, Title } from '../lib';
+import { Col, Text, Title } from '../lib';
 
 type Props = {
   title: string;
   subtitle?: string;
 };
 
-function Header({ title, subtitle }: Props) {
+export function Header({ title, subtitle }: Props) {
   return (
     <Col py="m">
       <Title px="m">{title}</Title>

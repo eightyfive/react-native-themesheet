@@ -1,6 +1,7 @@
 import {
   ColorValue,
   ImageStyle as RNImageStyle,
+  StyleProp as RNStyleProp,
   TextStyle as RNTextStyle,
   ViewStyle as RNViewStyle,
 } from 'react-native';
@@ -106,4 +107,12 @@ export type Style<S extends Sizes, C extends Colors> =
 
 export type NamedStyles<S extends Sizes, C extends Colors, T> = {
   [P in keyof T]: Style<S, C>;
+};
+
+export type BoxProps<S extends Sizes> = {
+  [Key in SpacingProp]?: keyof S;
+};
+
+export type BoxBaseProps = {
+  style?: RNStyleProp<RNViewStyle>;
 };

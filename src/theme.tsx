@@ -1,8 +1,17 @@
+import React from 'react';
 import { ColorValue, StyleSheet } from 'react-native';
 import { createDialStyle, Dial } from 'react-native-col';
 import _mapValues from 'lodash.mapvalues';
-import { NamedStyles, RNStyle, SpacingProp, Theme } from './types';
-import { aliasToProp } from './utils';
+import {
+  BoxBaseProps,
+  BoxProps,
+  NamedStyles,
+  RNStyle,
+  SpacingProp,
+  Theme,
+} from './types';
+import { aliasToProp, getBoxStyle } from './utils';
+import { ComponentType } from 'react';
 
 export function createTheme<T extends Theme>({ colors, sizes }: T) {
   //
@@ -129,12 +138,71 @@ export function createTheme<T extends Theme>({ colors, sizes }: T) {
   }
 
   //
+  // createBox
+  //
+  function createBox<P extends BoxBaseProps>(
+    BaseComponent: ComponentType<any>,
+  ) {
+    return ({
+      style: styleProp,
+      m,
+      mt,
+      mr,
+      mb,
+      ml,
+      mx,
+      my,
+      ms,
+      me,
+      //
+      p,
+      pt,
+      pr,
+      pb,
+      pl,
+      px,
+      py,
+      ps,
+      pe,
+      ...rest
+    }: P & BoxProps<typeof sizes>) => {
+      const style = getBoxStyle<typeof sizes>(
+        {
+          m,
+          mt,
+          mr,
+          mb,
+          ml,
+          mx,
+          my,
+          ms,
+          me,
+          //
+          p,
+          pt,
+          pr,
+          pb,
+          pl,
+          px,
+          py,
+          ps,
+          pe,
+        },
+        sizes,
+      );
+
+      return <BaseComponent {...rest} style={[style, styleProp]} />;
+    };
+  }
+
+  //
   // API
   //
   return {
     colors,
     sizes,
     //
+    createBox,
     createStyles,
     createVariants,
   };

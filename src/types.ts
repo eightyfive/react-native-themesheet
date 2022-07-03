@@ -77,7 +77,7 @@ export interface ViewStyle<S extends Sizes, C extends Colors>
     Omit<RNViewStyle, 'backgroundColor' | 'borderColor' | 'borderRadius'> {
   backgroundColor?: keyof C;
   borderColor?: keyof C;
-  borderRadius?: keyof S;
+  borderRadius?: keyof S | number;
 }
 
 export interface TextStyle<S extends Sizes, C extends Colors>

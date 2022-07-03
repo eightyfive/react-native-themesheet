@@ -17,40 +17,31 @@ A Theme consist of a set of `colors` & a set of `sizes`.
 ```ts
 // src/views/theme.ts
 
-export const { colors, createBox, createStyles, createVariants, sizes } =
-  createTheme(
-    {
-      primary: 'black',
-      accent: 'white',
-      //
-      onPrimary: 'white',
-      onAccent: 'black',
-    },
-    {
-      s: 4,
-      m: 8,
-      l: 16,
-      roundness: 10,
-    },
-  );
+export const { createBox, createStyles, createVariants } = createTheme(
+  {
+    primary: 'black',
+    accent: 'white',
+    //
+    onPrimary: 'white',
+    onAccent: 'black',
+  },
+  {
+    s: 4,
+    m: 8,
+    l: 16,
+    roundness: 10,
+  },
+);
 ```
 
 ### Create styles
 
-`createStyles` allows you to create normal react-native `StyleSheet` styles with spacing shorthands & theme color mapping.
+`createStyles` allows you to create normal `react-native` styles with spacing shorthands & Theme color mapping.
 
 ```ts
 // src/views/home.tsx
 
 import { createStyles } from './theme';
-
-export function Home(props) {
-  return (
-    <View style={$.container}>
-      <Text style={$.text}>Hello !</Text>
-    </View>
-  );
-}
 
 const $ = createStyles({
   container: {
@@ -64,9 +55,17 @@ const $ = createStyles({
   },
   text: {
     color: 'onPrimary', // <-- color name
-    px: 'l', // <-- size name
+    pl: 'l', // <-- `paddingLeft` shorthand + size name
   },
 });
+
+export function Home(props) {
+  return (
+    <View style={$.container}>
+      <Text style={$.text}>Hello !</Text>
+    </View>
+  );
+}
 ```
 
 ### Create variants
@@ -77,6 +76,39 @@ const $ = createStyles({
 // src/views/lib/button.tsx
 
 import { createVariants } from '../theme';
+
+const $ = createVariants(
+  // defaults
+  {
+    borderRadius: 'roundness',
+    borderWidth: 1,
+    p: 'm',
+  },
+  // variants
+  {
+    primary: {
+      backgroundColor: 'onPrimary',
+      borderColor: 'onPrimary',
+    },
+    accent: {
+      backgroundColor: 'accent',
+      borderColor: 'accent',
+    },
+    secondary: {
+      backgroundColor: 'transparent',
+      borderColor: 'onPrimary',
+    },
+  },
+  // modifiers
+  {
+    disabled: {
+      opacity: 0.75,
+    },
+    compact: {
+      p: 's',
+    },
+  },
+);
 
 type Props = {
   children: string;
@@ -113,39 +145,6 @@ export function Button({
     </Pressable>
   );
 }
-
-const $ = createVariants(
-  // defaults
-  {
-    borderRadius: 'roundness',
-    borderWidth: 1,
-    p: 'm',
-  },
-  // variants
-  {
-    primary: {
-      backgroundColor: 'onPrimary',
-      borderColor: 'onPrimary',
-    },
-    accent: {
-      backgroundColor: 'accent',
-      borderColor: 'accent',
-    },
-    secondary: {
-      backgroundColor: 'transparent',
-      borderColor: 'onPrimary',
-    },
-  },
-  // modifiers
-  {
-    disabled: {
-      opacity: 0.75,
-    },
-    compact: {
-      p: 's',
-    },
-  },
-);
 ```
 
 ### Create boxes
@@ -196,7 +195,22 @@ export function Header({ title, subtitle }: Props) {
 
 ## API
 
-### `createTheme(colors: Colors, sizes: Sizes)`
+### `createTheme(colors, sizes)`
+
+```ts
+type Colors = Record<string, ColorValue>
+
+type Sizes = Record<string, number>
+
+createTheme<C extends Colors, S extends Sizes>(colors: C, sizes: S): {
+  colors,
+  sizes,
+  //
+  createBox,
+  createStyles,
+  createVariants
+}
+```
 
 This is the only public API available. All utility functions are exported from it.
 
@@ -218,7 +232,11 @@ export const { colors, createBox, createStyles, createVariants, sizes } =
   );
 ```
 
-### `Theme.createBox<BaseComponentProps>(BaseComponent: ComponentType<any>)`
+### `Theme.createBox(BaseComponent)`
+
+```ts
+createBox<BaseComponentProps>(BaseComponent: ComponentType<any>)
+```
 
 Enhance `BaseComponent` with spacing shorthand properties:
 
@@ -253,7 +271,11 @@ const Box = createBox<ViewProps>(View);
 const Title = createBox<TextProps>(Text);
 ```
 
-### `Theme.createStyles(styles: Record<string, Style>)`
+### `Theme.createStyles(styles)`
+
+```ts
+createStyles(styles: Record<string, Style>)
+```
 
 A `Style` accepts all normal `react-native` style properties as well as `FlexStyle` & `SpacingStyle` properties:
 
@@ -288,7 +310,7 @@ const $ = createStyles({
 });
 ```
 
-#### `FlexStyle`
+#### Note about `FlexStyle`
 
 A `FlexStyle` is a shorthand describing Flexbox properties.
 
@@ -336,7 +358,11 @@ const $ = createStyles({
 
 For an even more semantic way to express Flexbox positioning, check out [`react-native-col`](https://github.com/eightyfive/react-native-col).
 
-### `Theme.createVariants(defaults: Style, variants: Record<string, Style>, modifiers: Record<string, Style>)`
+### `Theme.createVariants(defaults, variants, modifiers)`
+
+```ts
+createVariants(defaults: Style, variants: Record<string, Style>, modifiers: Record<string, Style>)
+```
 
 `createVariants` returns a function helper to easily pick a component "variant" style:
 

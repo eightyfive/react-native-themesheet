@@ -1,7 +1,7 @@
 import { createTheme } from './index';
 
-const { colors, createStyles, createVariants, sizes } = createTheme({
-  colors: {
+const { colors, createStyles, createVariants, sizes } = createTheme(
+  {
     primary: 'black',
     accent: 'white',
     positive: 'green',
@@ -11,15 +11,13 @@ const { colors, createStyles, createVariants, sizes } = createTheme({
     onPrimary: 'white',
     onAccent: 'black',
   },
-  sizes: {
+  {
     s: 4,
     m: 8,
     l: 16,
     roundness: 10,
   },
-});
-
-// Theme
+);
 
 test('createStyles', () => {
   const $ = createStyles({

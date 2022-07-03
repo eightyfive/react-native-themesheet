@@ -1,10 +1,13 @@
 import _mapValues from 'lodash.mapvalues';
-import { Theme } from './types';
-import { createCreateBox } from './box';
 import { createCreateStyles } from './styles';
 import { createCreateVariants } from './variants';
+import { Colors, Sizes } from './types';
+import { createCreateBox } from './box';
 
-export function createTheme<T extends Theme>({ colors, sizes }: T) {
+export function createTheme<C extends Colors, S extends Sizes>(
+  colors: C,
+  sizes: S,
+) {
   const createStyles = createCreateStyles(sizes, colors);
 
   const createVariants = createCreateVariants<typeof sizes, typeof colors>(
@@ -13,9 +16,6 @@ export function createTheme<T extends Theme>({ colors, sizes }: T) {
 
   const createBox = createCreateBox<typeof sizes>(sizes);
 
-  //
-  // API
-  //
   return {
     colors,
     sizes,

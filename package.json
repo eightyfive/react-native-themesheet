@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/eightyfive/react-native-themesheet#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
     "lodash.mapvalues": "^4.6.0",

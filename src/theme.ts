@@ -10,7 +10,7 @@ import _mapValues from 'lodash.mapvalues';
 import { Colors, Sizes, SpacingProp } from './types';
 import { aliasToProp } from './utils';
 
-type ThemeT = {
+type Theme = {
   colors: Record<string, ColorValue>;
   sizes: Record<string, number>;
 };
@@ -59,17 +59,17 @@ type NamedStyles<S extends Sizes, C extends Colors, T> = {
   [P in keyof T]: Style<S, C>;
 };
 
-export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
+export function createTheme<T extends Theme>({ colors, sizes }: T) {
   //
   // createStyles
   //
   function createStyles<
-    T extends
-      | NamedStyles<TT['sizes'], TT['colors'], T>
-      | NamedStyles<TT['sizes'], TT['colors'], any>,
+    S extends
+      | NamedStyles<T['sizes'], T['colors'], S>
+      | NamedStyles<T['sizes'], T['colors'], any>,
   >(
-    styles: T | NamedStyles<TT['sizes'], TT['colors'], T>,
-  ): StyleSheet.NamedStyles<T> {
+    styles: S | NamedStyles<T['sizes'], T['colors'], S>,
+  ): StyleSheet.NamedStyles<S> {
     return StyleSheet.create(
       _mapValues(styles, (aliases) => {
         const style: RNStyle = {};
@@ -155,14 +155,14 @@ export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
   //
   function createVariants<
     V extends
-      | NamedStyles<TT['sizes'], TT['colors'], V>
-      | NamedStyles<TT['sizes'], TT['colors'], any>,
+      | NamedStyles<T['sizes'], T['colors'], V>
+      | NamedStyles<T['sizes'], T['colors'], any>,
     M extends
-      | NamedStyles<TT['sizes'], TT['colors'], M>
-      | NamedStyles<TT['sizes'], TT['colors'], any>,
+      | NamedStyles<T['sizes'], T['colors'], M>
+      | NamedStyles<T['sizes'], T['colors'], any>,
   >(
-    variants: V | NamedStyles<TT['sizes'], TT['colors'], V>,
-    modifiers: M | NamedStyles<TT['sizes'], TT['colors'], M>,
+    variants: V | NamedStyles<T['sizes'], T['colors'], V>,
+    modifiers: M | NamedStyles<T['sizes'], T['colors'], M>,
   ) {
     const vStyles = createStyles(variants);
     const mStyles = createStyles(modifiers);

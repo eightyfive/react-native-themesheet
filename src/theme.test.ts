@@ -104,7 +104,9 @@ test('createVariants', () => {
     },
   );
 
-  expect($('primary', { disabled: true })).toEqual([
+  const styles = $('primary', { disabled: true });
+
+  expect(styles).toEqual([
     {
       backgroundColor: colors.onPrimary,
       borderColor: colors.onPrimary,

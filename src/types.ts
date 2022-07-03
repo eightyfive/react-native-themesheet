@@ -87,9 +87,10 @@ export interface TextStyle<S extends Sizes, C extends Colors>
 export interface ImageStyle<S extends Sizes, C extends Colors>
   extends FlexStyle,
     SpacingStyle<S>,
-    Omit<RNImageStyle, 'backgroundColor' | 'borderColor'> {
+    Omit<RNImageStyle, 'backgroundColor' | 'borderColor' | 'tintColor'> {
   backgroundColor?: keyof C;
   borderColor?: keyof C;
+  tintColor?: keyof C;
 }
 
 export type RNStyle = RNViewStyle | RNTextStyle | RNImageStyle;

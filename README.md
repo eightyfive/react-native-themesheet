@@ -172,7 +172,7 @@ Later in app:
 ```ts
 // src/views/header.tsx
 
-import { Col, Text, Title } from '../lib';
+import { Col, Text, Title } from './lib';
 
 type Props = {
   title: string;

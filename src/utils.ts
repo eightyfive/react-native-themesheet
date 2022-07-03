@@ -4,7 +4,7 @@ export function getKeys<T>(object: T) {
   return Object.keys(object) as (keyof T)[];
 }
 
-export const propToName: Record<SpacingProp, SpacingName> = {
+export const propToStyle: Record<SpacingProp, SpacingName> = {
   m: 'margin',
   mt: 'marginTop',
   mr: 'marginRight',

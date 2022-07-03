@@ -8,7 +8,7 @@ import {
 import { createDialStyle, Dial } from 'react-native-col';
 import _mapValues from 'lodash.mapvalues';
 import { Colors, Sizes, SpacingProp } from './types';
-import { propToName } from './utils';
+import { propToStyle } from './utils';
 
 type ThemeT = {
   colors: Record<string, ColorValue>;
@@ -107,8 +107,8 @@ export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
                 console.warn(`Size not found: ${key} (${value})`);
               }
             }
-          } else if (key in propToName) {
-            const rnSpacingProperty = propToName[key as SpacingProp];
+          } else if (key in propToStyle) {
+            const rnSpacingProperty = propToStyle[key as SpacingProp];
 
             if (typeof value === 'number') {
               result[rnSpacingProperty] = value;

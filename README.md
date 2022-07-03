@@ -71,7 +71,7 @@ const $ = createStyles({
 
 ### Create variants
 
-`createVariants` allows you to pick a component "variant" style.
+`createVariants` allows you to easily compose a component "variant" style.
 
 ```ts
 // src/views/lib/button.tsx
@@ -148,69 +148,48 @@ const $ = createVariants(
 );
 ```
 
-### Create box
+### Create boxes
 
 `createBox` enhance a component with spacing shorthand properties.
 
-A simple `Row` component with spacing:
-
 ```ts
-// src/views/lib/row.tsx
+// src/views/lib.ts
 
-import { View, ViewProps } from 'react-native';
+import { Text as RNText, TextProps, View, ViewProps } from 'react-native';
 
-import { createBox, createStyles } from '../theme';
+import { createBox } from './theme';
 
-function RowInner({ style, ...rest }: ViewProps) {
-  return <View {...rest} style={[$.row, style]} />;
-}
-
-export const Row = createBox<ViewProps>(RowInner);
-
-const $ = createStyles({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
-```
-
-Some `Text` component with spacing:
-
-```ts
-// src/views/lib/text.tsx
-
-import { Text as RNText, TextProps } from 'react-native';
-
-import { createBox } from '../theme';
+export const Col = createBox<ViewProps>(View);
 
 export const Text = createBox<TextProps>(RNText);
+
+export const Title = createBox<TextProps>((props: TextProps) => (
+  <RNText {...props} style={{ fontSize: 22 }}></RNText>
+));
 ```
 
-Let's centralize `lib` imports...
+Later in app:
 
 ```ts
-// src/views/lib/index.ts
+// src/views/header.tsx
 
-export * from './row';
-export * from './text';
-```
+import { Row, Text, Title } from '../lib';
 
-Later in app, some `Avatar` component making use of them:
+type Props = {
+  title: string;
+  subtitle?: string;
+};
 
-```ts
-// src/views/components/avatar.tsx
-
-import { Image } from 'react-native';
-
-import { Row, Text } from '../lib';
-
-function Avatar({ uri, username }) {
+function Header({ title, subtitle }: Props) {
   return (
-    <Row p="m">
-      <Image source={{ uri }} />
-      <Text ml="m">{username}</Text>
-    </Row>
+    <Col py="m">
+      <Title px="m">{title}</Title>
+      {subtitle ? (
+        <Text px="l" mt="s">
+          {subtitle}
+        </Text>
+      ) : null}
+    </Col>
   );
 }
 ```
@@ -334,7 +313,7 @@ const $ = createStyles({
   colC: {
     col: 5,
   },
-  // $.colC = { flexDirection: 'col', justifyContent: 'center', alignItems: 'center' }
+  // $.colC = { flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }
 
   rowBR: {
     row: 9,
@@ -351,7 +330,7 @@ const $ = createStyles({
     col: 8,
     alignItems: 'stretch',
   },
-  // $.colLRB = { flexDirection: 'col', justifyContent: 'flex-end', alignItems: 'stretch' }
+  // $.colLRB = { flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'stretch' }
 });
 ```
 
@@ -390,7 +369,7 @@ $('primary', { disabled: false }); // --> [{ borderWidth: 1}, { borderColor: col
 
 $('accent', { disabled: true }); // --> [{ borderWidth: 1}, { borderColor: colors.accent }, { opacity: 0.5 }]
 
-$('secondary', {}); // TS error (variant not found)
+$('secondary', { disabled: true }); // TS error (variant not found)
 
 $('primary', { compact: true }); // TS error (modifier not found)
 ```

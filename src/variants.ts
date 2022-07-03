@@ -14,7 +14,7 @@ export function createCreateVariants<S extends Sizes, C extends Colors>(
     const vStyles = createStyles(variants);
     const mStyles = createStyles(modifiers);
 
-    return function (
+    return function getVariantStyle(
       variant: keyof typeof vStyles,
       modifier: Partial<Record<keyof typeof mStyles, boolean>>,
     ) {

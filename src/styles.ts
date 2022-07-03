@@ -4,7 +4,7 @@ import _mapValues from 'lodash.mapvalues';
 import { Colors, NamedStyles, RNStyle, Sizes, SpacingProp } from './types';
 import { aliasToProp } from './utils';
 
-export function createCreateStyles<S extends Sizes, C extends Colors>(
+export function createStylesFactory<S extends Sizes, C extends Colors>(
   sizes: S,
   colors: C,
 ) {

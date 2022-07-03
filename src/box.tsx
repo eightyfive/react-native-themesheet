@@ -3,7 +3,7 @@ import _mapValues from 'lodash.mapvalues';
 import { BoxProps, Sizes } from './types';
 import { getBoxStyle } from './utils';
 
-export function createCreateBox<S extends Sizes>(sizes: S) {
+export function createBoxFactory<S extends Sizes>(sizes: S) {
   return function createBox<Props>(Component: ComponentType<any>) {
     return ({
       m,

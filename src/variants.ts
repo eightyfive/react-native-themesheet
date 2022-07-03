@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import _mapValues from 'lodash.mapvalues';
 import { Colors, NamedStyles, Sizes } from './types';
 
-export function createCreateVariants<S extends Sizes, C extends Colors>(
+export function createVariantsFactory<S extends Sizes, C extends Colors>(
   createStyles: <T>(
     styles: T | NamedStyles<S, C, T>,
   ) => StyleSheet.NamedStyles<T>,

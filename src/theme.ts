@@ -1,63 +1,8 @@
-import {
-  ColorValue,
-  ImageStyle as RNImageStyle,
-  StyleSheet,
-  TextStyle as RNTextStyle,
-  ViewStyle as RNViewStyle,
-} from 'react-native';
+import { ColorValue, StyleSheet } from 'react-native';
 import { createDialStyle, Dial } from 'react-native-col';
 import _mapValues from 'lodash.mapvalues';
-import { Colors, Sizes, SpacingProp } from './types';
+import { NamedStyles, RNStyle, SpacingProp, Theme } from './types';
 import { aliasToProp } from './utils';
-
-type Theme = {
-  colors: Record<string, ColorValue>;
-  sizes: Record<string, number>;
-};
-
-type SpacingStyle<S extends Sizes> = Partial<Record<SpacingProp, keyof S>>;
-
-type FlexStyle = {
-  col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  row?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-};
-
-interface ViewStyle<S extends Sizes, C extends Colors>
-  extends FlexStyle,
-    SpacingStyle<S>,
-    Omit<RNViewStyle, 'backgroundColor' | 'borderColor' | 'borderRadius'> {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
-  borderRadius?: keyof S;
-}
-
-interface TextStyle<S extends Sizes, C extends Colors>
-  extends FlexStyle,
-    SpacingStyle<S>,
-    Omit<RNTextStyle, 'backgroundColor' | 'borderColor' | 'color'> {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
-  color?: keyof C;
-}
-
-interface ImageStyle<S extends Sizes, C extends Colors>
-  extends FlexStyle,
-    SpacingStyle<S>,
-    Omit<RNImageStyle, 'backgroundColor' | 'borderColor'> {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
-}
-
-type RNStyle = RNViewStyle | RNTextStyle | RNImageStyle;
-
-type Style<S extends Sizes, C extends Colors> =
-  | ViewStyle<S, C>
-  | TextStyle<S, C>
-  | ImageStyle<S, C>;
-
-type NamedStyles<S extends Sizes, C extends Colors, T> = {
-  [P in keyof T]: Style<S, C>;
-};
 
 export function createTheme<T extends Theme>({ colors, sizes }: T) {
   //
@@ -108,17 +53,17 @@ export function createTheme<T extends Theme>({ colors, sizes }: T) {
               }
             }
           } else if (alias in aliasToProp) {
-            const styleName = aliasToProp[alias as SpacingProp];
+            const prop = aliasToProp[alias as SpacingProp];
 
             if (typeof value === 'number') {
-              style[styleName] = value;
+              style[prop] = value;
             } else {
               const size = sizes[value as keyof typeof sizes];
 
               if (size) {
-                style[styleName] = size;
+                style[prop] = size;
               } else {
-                style[styleName] = value as string | number;
+                style[prop] = value as string | number;
 
                 if (__DEV__) {
                   console.warn(`Size not found: ${alias} (${value})`);
@@ -138,7 +83,7 @@ export function createTheme<T extends Theme>({ colors, sizes }: T) {
               console.warn(`Flex value invalid: ${alias} (${value})`);
             }
           } else {
-            // By default just forward prop
+            // By default just forward prop (= alias)
 
             // @ts-ignore
             style[alias] = value;

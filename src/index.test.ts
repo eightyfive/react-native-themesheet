@@ -79,6 +79,10 @@ test('createStyles', () => {
 test('createVariants', () => {
   const $ = createVariants(
     {
+      borderWidth: 1,
+      p: 'm',
+    },
+    {
       primary: {
         backgroundColor: 'onPrimary',
         borderColor: 'onPrimary',
@@ -97,21 +101,29 @@ test('createVariants', () => {
         opacity: 0.75,
       },
       compact: {
-        px: 's',
+        p: 's',
       },
     },
   );
 
   expect($('primary', { compact: true, disabled: true })).toEqual([
     {
+      borderWidth: 1,
+      padding: sizes.m,
+    },
+    {
       backgroundColor: colors.onPrimary,
       borderColor: colors.onPrimary,
     },
-    { paddingHorizontal: sizes.s },
+    { padding: sizes.s },
     { opacity: 0.75 },
   ]);
 
   expect($('accent', { compact: false })).toEqual([
+    {
+      borderWidth: 1,
+      padding: sizes.m,
+    },
     {
       backgroundColor: colors.accent,
       borderColor: colors.accent,

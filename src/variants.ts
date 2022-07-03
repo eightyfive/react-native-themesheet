@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import _mapValues from 'lodash.mapvalues';
-import { Colors, NamedStyles, Sizes } from './types';
+import { Colors, NamedStyles, Sizes, Style } from './types';
 
 export function createVariantsFactory<S extends Sizes, C extends Colors>(
   createStyles: <T>(
@@ -10,7 +10,12 @@ export function createVariantsFactory<S extends Sizes, C extends Colors>(
   return function createVariants<
     V extends NamedStyles<S, C, V> | NamedStyles<S, C, any>,
     M extends NamedStyles<S, C, M> | NamedStyles<S, C, any>,
-  >(variants: V | NamedStyles<S, C, V>, modifiers: M | NamedStyles<S, C, M>) {
+  >(
+    defaults: Style<S, C>,
+    variants: V | NamedStyles<S, C, V>,
+    modifiers: M | NamedStyles<S, C, M>,
+  ) {
+    const dStyles = createStyles({ defaults });
     const vStyles = createStyles(variants);
     const mStyles = createStyles(modifiers);
 
@@ -18,7 +23,7 @@ export function createVariantsFactory<S extends Sizes, C extends Colors>(
       variant: keyof typeof vStyles,
       modifier: Partial<Record<keyof typeof mStyles, boolean>>,
     ) {
-      const styles = [vStyles[variant]];
+      const styles = [dStyles.defaults, vStyles[variant]];
 
       for (let mod in modifier) {
         if (modifier[mod]) {

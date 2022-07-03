@@ -1,12 +1,14 @@
 {
   "name": "react-native-themesheet",
-  "version": "0.0.1",
-  "description": "Themed StyleSheet",
+  "version": "0.0.0",
+  "description": "Lightweight alternative to @shopify/restyle",
   "keywords": [
     "react-native",
     "react-native-stylesheet",
     "theme",
-    "stylesheet"
+    "stylesheet",
+    "shopify",
+    "restyle"
   ],
   "author": "0x55 <0xfiftyfive@gmail.com>",
   "license": "MIT",

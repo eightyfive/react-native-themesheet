@@ -1,7 +1,6 @@
 import {
   ColorValue,
   ImageStyle as RNImageStyle,
-  StyleProp as RNStyleProp,
   TextStyle as RNTextStyle,
   ViewStyle as RNViewStyle,
 } from 'react-native';
@@ -17,17 +16,6 @@ export type MarginProp =
   | 'ms'
   | 'me';
 
-export type MarginName =
-  | 'margin'
-  | 'marginTop'
-  | 'marginRight'
-  | 'marginBottom'
-  | 'marginLeft'
-  | 'marginHorizontal'
-  | 'marginVertical'
-  | 'marginStart'
-  | 'marginEnd';
-
 export type PaddingProp =
   | 'p'
   | 'pt'
@@ -38,6 +26,19 @@ export type PaddingProp =
   | 'py'
   | 'ps'
   | 'pe';
+
+export type SpacingProp = MarginProp | PaddingProp;
+
+export type MarginName =
+  | 'margin'
+  | 'marginTop'
+  | 'marginRight'
+  | 'marginBottom'
+  | 'marginLeft'
+  | 'marginHorizontal'
+  | 'marginVertical'
+  | 'marginStart'
+  | 'marginEnd';
 
 export type PaddingName =
   | 'padding'
@@ -50,18 +51,11 @@ export type PaddingName =
   | 'paddingStart'
   | 'paddingEnd';
 
-export type SpacingProp = MarginProp | PaddingProp;
-
 export type SpacingName = MarginName | PaddingName;
 
 export type Colors = Record<string, ColorValue>;
 
 export type Sizes = Record<string, number>;
-
-export type Theme = {
-  colors: Record<string, ColorValue>;
-  sizes: Record<string, number>;
-};
 
 export type SpacingStyle<S extends Sizes> = Partial<
   Record<SpacingProp, keyof S>
@@ -111,8 +105,4 @@ export type NamedStyles<S extends Sizes, C extends Colors, T> = {
 
 export type BoxProps<S extends Sizes> = {
   [Key in SpacingProp]?: keyof S;
-};
-
-export type BoxBaseProps = {
-  style?: RNStyleProp<RNViewStyle>;
 };

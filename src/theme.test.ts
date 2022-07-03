@@ -1,11 +1,12 @@
 import { createTheme } from './theme';
 
-const { colors, createStyles, sizes } = createTheme({
+const { colors, createStyles, createVariants, sizes } = createTheme({
   colors: {
     primary: 'black',
     accent: 'white',
     positive: 'green',
     negative: 'red',
+    transparent: 'transparent',
     //
     onPrimary: 'white',
     onAccent: 'black',
@@ -19,8 +20,9 @@ const { colors, createStyles, sizes } = createTheme({
 });
 
 // Theme
+
 test('createStyles', () => {
-  const styles = createStyles({
+  const $ = createStyles({
     box: {
       backgroundColor: 'primary',
       borderColor: 'accent',
@@ -45,7 +47,7 @@ test('createStyles', () => {
     },
   });
 
-  expect(styles.box).toEqual({
+  expect($.box).toEqual({
     backgroundColor: colors.primary,
     borderColor: colors.accent,
     paddingHorizontal: sizes.s,
@@ -56,7 +58,7 @@ test('createStyles', () => {
     alignItems: 'center',
   });
 
-  expect(styles.row).toEqual({
+  expect($.row).toEqual({
     marginTop: sizes.l,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -64,14 +66,49 @@ test('createStyles', () => {
     borderRadius: sizes.roundness,
   });
 
-  expect(styles.text).toEqual({
+  expect($.text).toEqual({
     backgroundColor: colors.accent,
     color: colors.onAccent,
     marginBottom: sizes.l,
   });
 
-  expect(styles.error).toEqual({
+  expect($.error).toEqual({
     backgroundColor: colors.negative,
     color: colors.positive,
   });
+});
+
+test('createVariants', () => {
+  const $ = createVariants(
+    {
+      primary: {
+        backgroundColor: 'onPrimary',
+        borderColor: 'onPrimary',
+      },
+      accent: {
+        backgroundColor: 'accent',
+        borderColor: 'accent',
+      },
+      secondary: {
+        backgroundColor: 'transparent',
+        borderColor: 'onPrimary',
+      },
+    },
+    {
+      disabled: {
+        opacity: 0.75,
+      },
+      compact: {
+        px: 's',
+      },
+    },
+  );
+
+  expect($('primary', { disabled: true })).toEqual([
+    {
+      backgroundColor: colors.onPrimary,
+      borderColor: colors.onPrimary,
+    },
+    { opacity: 0.75 },
+  ]);
 });

@@ -60,93 +60,126 @@ type NamedStyles<S extends Sizes, C extends Colors, T> = {
 };
 
 export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
-  return {
-    colors,
-    sizes,
-    //
-    createStyles<
-      T extends
-        | NamedStyles<TT['sizes'], TT['colors'], T>
-        | NamedStyles<TT['sizes'], TT['colors'], any>,
-    >(
-      styles: T | NamedStyles<TT['sizes'], TT['colors'], T>,
-    ): StyleSheet.NamedStyles<T> {
-      return StyleSheet.create(
-        _mapValues(styles, (style) => {
-          const result: RNStyle = {};
+  function createStyles<
+    T extends
+      | NamedStyles<TT['sizes'], TT['colors'], T>
+      | NamedStyles<TT['sizes'], TT['colors'], any>,
+  >(
+    styles: T | NamedStyles<TT['sizes'], TT['colors'], T>,
+  ): StyleSheet.NamedStyles<T> {
+    return StyleSheet.create(
+      _mapValues(styles, (style) => {
+        const result: RNStyle = {};
 
-          for (let key in style) {
-            const value = style[key];
+        for (let key in style) {
+          const value = style[key];
 
-            if (
-              key === 'backgroundColor' ||
-              key === 'borderColor' ||
-              key === 'color'
-            ) {
-              const color = colors[value as keyof typeof colors];
+          if (
+            key === 'backgroundColor' ||
+            key === 'borderColor' ||
+            key === 'color'
+          ) {
+            const color = colors[value as keyof typeof colors];
 
-              if (color) {
-                // @ts-ignore
-                result[key] = color;
-              } else {
-                // @ts-ignore
-                result[key] = value as ColorValue;
+            if (color) {
+              // @ts-ignore
+              result[key] = color;
+            } else {
+              // @ts-ignore
+              result[key] = value as ColorValue;
 
-                if (__DEV__) {
-                  console.warn(`Color not found: ${key} (${color})`);
-                }
+              if (__DEV__) {
+                console.warn(`Color not found: ${key} (${color})`);
               }
-            } else if (key === 'borderRadius') {
+            }
+          } else if (key === 'borderRadius') {
+            const size = sizes[value as keyof typeof sizes];
+
+            if (size) {
+              result.borderRadius = size;
+            } else {
+              result.borderRadius = value as number;
+
+              if (__DEV__) {
+                console.warn(`Size not found: ${key} (${value})`);
+              }
+            }
+          } else if (key in propToName) {
+            const rnSpacingProperty = propToName[key as SpacingProp];
+
+            if (typeof value === 'number') {
+              result[rnSpacingProperty] = value;
+            } else {
               const size = sizes[value as keyof typeof sizes];
 
               if (size) {
-                result.borderRadius = size;
+                result[rnSpacingProperty] = size;
               } else {
-                result.borderRadius = value as number;
+                result[rnSpacingProperty] = value as string | number;
 
                 if (__DEV__) {
                   console.warn(`Size not found: ${key} (${value})`);
                 }
               }
-            } else if (key in propToName) {
-              const rnSpacingProperty = propToName[key as SpacingProp];
-
-              if (typeof value === 'number') {
-                result[rnSpacingProperty] = value;
-              } else {
-                const size = sizes[value as keyof typeof sizes];
-
-                if (size) {
-                  result[rnSpacingProperty] = size;
-                } else {
-                  result[rnSpacingProperty] = value as string | number;
-
-                  if (__DEV__) {
-                    console.warn(`Size not found: ${key} (${value})`);
-                  }
-                }
-              }
-            } else if (key === 'col' || key === 'row') {
-              if (typeof value === 'number' && (value >= 1 || value <= 9)) {
-                Object.assign(
-                  result,
-                  createDialStyle(
-                    key === 'col' ? 'column' : 'row',
-                    value as Dial,
-                  ),
-                );
-              } else if (__DEV__) {
-                console.warn(`Flex value invalid: ${key} (${value})`);
-              }
-            } else {
-              // @ts-ignore
-              result[key] = value;
             }
+          } else if (key === 'col' || key === 'row') {
+            if (typeof value === 'number' && (value >= 1 || value <= 9)) {
+              Object.assign(
+                result,
+                createDialStyle(
+                  key === 'col' ? 'column' : 'row',
+                  value as Dial,
+                ),
+              );
+            } else if (__DEV__) {
+              console.warn(`Flex value invalid: ${key} (${value})`);
+            }
+          } else {
+            // @ts-ignore
+            result[key] = value;
           }
+        }
 
-          return result;
-        }),
-      );
-    },
+        return result;
+      }),
+    );
+  }
+
+  function createVariants<
+    V extends
+      | NamedStyles<TT['sizes'], TT['colors'], V>
+      | NamedStyles<TT['sizes'], TT['colors'], any>,
+    M extends
+      | NamedStyles<TT['sizes'], TT['colors'], M>
+      | NamedStyles<TT['sizes'], TT['colors'], any>,
+  >(
+    variants: V | NamedStyles<TT['sizes'], TT['colors'], V>,
+    modifiers: M | NamedStyles<TT['sizes'], TT['colors'], M>,
+  ) {
+    const variantStyles = createStyles(variants);
+    const modifierStyles = createStyles(modifiers);
+
+    return function (
+      variant: keyof typeof variantStyles,
+      modifier: Partial<Record<keyof typeof modifierStyles, boolean>>,
+    ) {
+      const res = [variantStyles[variant]];
+
+      for (let mod in modifier) {
+        if (modifier[mod]) {
+          res.push(modifierStyles[mod]);
+        }
+      }
+
+      return res;
+    };
+  }
+
+  return {
+    colors,
+    sizes,
+    //
+    createStyles,
+    createVariants,
   };
 }

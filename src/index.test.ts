@@ -43,6 +43,10 @@ test('createStyles', () => {
       backgroundColor: 'negative',
       color: 'positive',
     },
+    colLRB: {
+      col: 8,
+      alignItems: 'stretch',
+    },
   });
 
   expect($.box).toEqual({
@@ -73,6 +77,12 @@ test('createStyles', () => {
   expect($.error).toEqual({
     backgroundColor: colors.negative,
     color: colors.positive,
+  });
+
+  expect($.colLRB).toEqual({
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
   });
 });
 

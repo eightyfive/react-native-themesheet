@@ -1,4 +1,4 @@
-import { createTheme } from './theme';
+import { createTheme } from './index';
 
 const { colors, createStyles, createVariants, sizes } = createTheme({
   colors: {

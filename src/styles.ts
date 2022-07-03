@@ -26,11 +26,9 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
             const color = colors[value as keyof typeof colors];
 
             if (color) {
-              // @ts-ignore
-              style[alias] = color;
+              (style as any)[alias] = color;
             } else {
-              // @ts-ignore
-              style[alias] = value as ColorValue;
+              (style as any)[alias] = value as ColorValue;
 
               if (__DEV__) {
                 console.warn(`Color not found: ${alias} (${String(color)})`);
@@ -81,8 +79,7 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
           } else {
             // By default just forward prop (= alias)
 
-            // @ts-ignore
-            style[alias] = value;
+            (style as any)[alias] = value;
           }
         }
 

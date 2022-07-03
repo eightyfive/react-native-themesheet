@@ -1,10 +1,10 @@
 import React, { ComponentType } from 'react';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import { getKeys, propToStyle } from './utils';
+import { getKeys, aliasToProp } from './utils';
 import { Sizes } from './types';
 
 type SpacingProps<S extends Sizes> = {
-  [Key in keyof typeof propToStyle]?: keyof S;
+  [Key in keyof typeof aliasToProp]?: keyof S;
 };
 
 type Props = {
@@ -83,7 +83,7 @@ function getSpacingStyle<S extends Sizes>(
       const sizeName = spacingProps[propName];
 
       if (sizeName) {
-        style[propToStyle[propName]] = sizes[sizeName];
+        style[aliasToProp[propName]] = sizes[sizeName];
       }
     });
 

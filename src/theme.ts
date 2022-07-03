@@ -8,7 +8,7 @@ import {
 import { createDialStyle, Dial } from 'react-native-col';
 import _mapValues from 'lodash.mapvalues';
 import { Colors, Sizes, SpacingProp } from './types';
-import { propToStyle } from './utils';
+import { aliasToProp } from './utils';
 
 type ThemeT = {
   colors: Record<string, ColorValue>;
@@ -71,79 +71,81 @@ export function createTheme<TT extends ThemeT>({ colors, sizes }: TT) {
     styles: T | NamedStyles<TT['sizes'], TT['colors'], T>,
   ): StyleSheet.NamedStyles<T> {
     return StyleSheet.create(
-      _mapValues(styles, (style) => {
-        const result: RNStyle = {};
+      _mapValues(styles, (aliases) => {
+        const style: RNStyle = {};
 
-        for (let key in style) {
-          const value = style[key];
+        for (let alias in aliases) {
+          const value = aliases[alias];
 
           if (
-            key === 'backgroundColor' ||
-            key === 'borderColor' ||
-            key === 'color'
+            alias === 'backgroundColor' ||
+            alias === 'borderColor' ||
+            alias === 'color'
           ) {
             const color = colors[value as keyof typeof colors];
 
             if (color) {
               // @ts-ignore
-              result[key] = color;
+              style[alias] = color;
             } else {
               // @ts-ignore
-              result[key] = value as ColorValue;
+              style[alias] = value as ColorValue;
 
               if (__DEV__) {
-                console.warn(`Color not found: ${key} (${color})`);
+                console.warn(`Color not found: ${alias} (${color})`);
               }
             }
-          } else if (key === 'borderRadius') {
+          } else if (alias === 'borderRadius') {
             const size = sizes[value as keyof typeof sizes];
 
             if (size) {
-              result.borderRadius = size;
+              style.borderRadius = size;
             } else {
-              result.borderRadius = value as number;
+              style.borderRadius = value as number;
 
               if (__DEV__) {
-                console.warn(`Size not found: ${key} (${value})`);
+                console.warn(`Size not found: ${alias} (${value})`);
               }
             }
-          } else if (key in propToStyle) {
-            const rnSpacingProperty = propToStyle[key as SpacingProp];
+          } else if (alias in aliasToProp) {
+            const styleName = aliasToProp[alias as SpacingProp];
 
             if (typeof value === 'number') {
-              result[rnSpacingProperty] = value;
+              style[styleName] = value;
             } else {
               const size = sizes[value as keyof typeof sizes];
 
               if (size) {
-                result[rnSpacingProperty] = size;
+                style[styleName] = size;
               } else {
-                result[rnSpacingProperty] = value as string | number;
+                style[styleName] = value as string | number;
 
                 if (__DEV__) {
-                  console.warn(`Size not found: ${key} (${value})`);
+                  console.warn(`Size not found: ${alias} (${value})`);
                 }
               }
             }
-          } else if (key === 'col' || key === 'row') {
+          } else if (alias === 'col' || alias === 'row') {
             if (typeof value === 'number' && (value >= 1 || value <= 9)) {
               Object.assign(
-                result,
+                style,
                 createDialStyle(
-                  key === 'col' ? 'column' : 'row',
+                  alias === 'col' ? 'column' : 'row',
                   value as Dial,
                 ),
               );
             } else if (__DEV__) {
-              console.warn(`Flex value invalid: ${key} (${value})`);
+              console.warn(`Flex value invalid: ${alias} (${value})`);
             }
           } else {
+            // By default just forward prop
+
             // @ts-ignore
-            result[key] = value;
+            style[alias] = value;
           }
         }
 
-        return result;
+        return style;
       }),
     );
   }

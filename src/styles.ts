@@ -21,7 +21,8 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
           if (
             alias === 'backgroundColor' ||
             alias === 'borderColor' ||
-            alias === 'color'
+            alias === 'color' ||
+            alias === 'tintColor'
           ) {
             const color = colors[value as keyof typeof colors];
 
@@ -37,15 +38,7 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
           } else if (alias === 'borderRadius') {
             const size = sizes[value as keyof typeof sizes];
 
-            if (size) {
-              style.borderRadius = size;
-            } else {
-              style.borderRadius = value as number;
-
-              if (__DEV__) {
-                console.warn(`Size not found: ${alias} (${value})`);
-              }
-            }
+            style.borderRadius = size || (value as number);
           } else if (alias in aliasToProp) {
             const prop = aliasToProp[alias as SpacingProp];
 

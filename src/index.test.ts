@@ -47,6 +47,9 @@ test('createStyles', () => {
       col: 8,
       alignItems: 'stretch',
     },
+    image: {
+      tintColor: 'accent',
+    },
   });
 
   expect($.box).toEqual({

@@ -1,6 +1,9 @@
 # App
 .DS_Store
 
+
+dist
+
 packages/*/dist
 packages/*/coverage
 

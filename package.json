@@ -15,9 +15,14 @@
   "main": "src/index.ts",
   "react-native": "src/index.ts",
   "scripts": {
+    "build": "rimraf dist && tsc -p .",
     "test": "jest src/",
     "release": "np"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/eightyfive/react-native-themesheet"

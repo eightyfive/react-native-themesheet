@@ -1,6 +1,6 @@
 {
   "name": "react-native-themesheet",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Lightweight alternative to @shopify/restyle",
   "keywords": [
     "react-native",

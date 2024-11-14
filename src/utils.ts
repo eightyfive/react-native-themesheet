@@ -1,7 +1,7 @@
 import { StyleSheet, ViewStyle as RNViewStyle } from 'react-native';
 import { SpacingProp, SpacingName, BoxProps, Sizes } from './types';
 
-export function getKeys<T>(object: T) {
+export function getKeys<T extends object>(object: T) {
   return Object.keys(object) as (keyof T)[];
 }
 

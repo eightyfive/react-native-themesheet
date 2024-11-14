@@ -3,7 +3,7 @@ import _mapValues from 'lodash.mapvalues';
 import { Colors, NamedStyles, Sizes, Style } from './types';
 
 export function createVariantsFactory<S extends Sizes, C extends Colors>(
-  createStyles: <T>(
+  createStyles: <T extends NamedStyles<S, C, T>>(
     styles: T | NamedStyles<S, C, T>,
   ) => StyleSheet.NamedStyles<T>,
 ) {

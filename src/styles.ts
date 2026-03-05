@@ -50,7 +50,7 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
               if (size) {
                 style[prop] = size;
               } else {
-                style[prop] = value as string | number;
+                style[prop] = value as number;
 
                 if (__DEV__) {
                   console.warn(`Size not found: ${alias} (${value})`);

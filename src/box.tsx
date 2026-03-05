@@ -25,6 +25,10 @@ export function createBoxFactory<S extends Sizes>(sizes: S) {
       py,
       ps,
       pe,
+      //
+      g,
+      gx,
+      gy,
       ...rest
     }: Props & BoxProps<S>) => {
       const style = getBoxStyle<S>(
@@ -48,6 +52,10 @@ export function createBoxFactory<S extends Sizes>(sizes: S) {
           py,
           ps,
           pe,
+          //
+          g,
+          gx,
+          gy,
         },
         sizes,
       );

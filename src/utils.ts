@@ -25,6 +25,10 @@ export const aliasToProp: Record<SpacingProp, SpacingName> = {
   py: 'paddingVertical',
   ps: 'paddingStart',
   pe: 'paddingEnd',
+  //
+  g: 'gap',
+  gx: 'columnGap',
+  gy: 'rowGap',
 };
 
 const sheets = new Map<string, RNViewStyle>();

@@ -27,7 +27,9 @@ export type PaddingProp =
   | 'ps'
   | 'pe';
 
-export type SpacingProp = MarginProp | PaddingProp;
+export type GapProp = 'g' | 'gx' | 'gy';
+
+export type SpacingProp = MarginProp | PaddingProp | GapProp;
 
 export type MarginName =
   | 'margin'
@@ -51,7 +53,9 @@ export type PaddingName =
   | 'paddingStart'
   | 'paddingEnd';
 
-export type SpacingName = MarginName | PaddingName;
+export type GapName = 'gap' | 'columnGap' | 'rowGap';
+
+export type SpacingName = MarginName | PaddingName | GapName;
 
 export type Colors = Record<string, ColorValue>;
 

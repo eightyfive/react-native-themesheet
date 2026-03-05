@@ -15,7 +15,7 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
       _mapValues(styles, (aliases) => {
         const style: RNStyle = {};
 
-        for (let alias in aliases) {
+        for (const alias in aliases) {
           const value = aliases[alias];
 
           if (

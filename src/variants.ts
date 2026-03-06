@@ -1,20 +1,20 @@
-import { StyleSheet } from 'react-native';
-import _mapValues from 'lodash.mapvalues';
-import { Colors, NamedStyles, Sizes, Style } from './types';
+import {
+  AnyNamedStyles,
+  Colors,
+  OutputNamedStyles,
+  Sizes,
+  Style,
+} from './types';
 
 export function createVariantsFactory<S extends Sizes, C extends Colors>(
-  createStyles: <T extends NamedStyles<S, C, T>>(
-    styles: T | NamedStyles<S, C, T>,
-  ) => StyleSheet.NamedStyles<T>,
+  createStyles: <T extends AnyNamedStyles<S, C>>(
+    styles: T,
+  ) => OutputNamedStyles<S, C, T>,
 ) {
   return function createVariants<
-    V extends NamedStyles<S, C, V> | NamedStyles<S, C, any>,
-    M extends NamedStyles<S, C, M> | NamedStyles<S, C, any>,
-  >(
-    defaults: Style<S, C>,
-    variants: V | NamedStyles<S, C, V>,
-    modifiers: M | NamedStyles<S, C, M>,
-  ) {
+    V extends AnyNamedStyles<S, C>,
+    M extends AnyNamedStyles<S, C>,
+  >(defaults: Style<S, C>, variants: V, modifiers: M) {
     const dStyles = createStyles({ defaults });
     const vStyles = createStyles(variants);
     const mStyles = createStyles(modifiers);

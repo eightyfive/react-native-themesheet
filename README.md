@@ -36,7 +36,7 @@ export const { createBox, createStyles, createVariants } = createTheme(
 
 ### Create styles
 
-`createStyles` allows you to create normal `react-native` styles with spacing shorthands & Theme color mapping.
+`createStyles` allows you to create normal `react-native` styles with Theme color and size mapping.
 
 ```ts
 // src/views/home.tsx
@@ -48,14 +48,16 @@ const $ = createStyles({
     backgroundColor: 'primary', // <-- color name
     borderColor: 'accent', // <-- color name
     borderRadius: 'roundness', // <-- size name
-    px: 's', // <-- `paddingHorizontal` shorthand + size name
-    my: 'm', // <-- `marginVertical` shorthand + size name
-    marginLeft: 30, // <-- no shorthand, normal `number` value
-    col: 5, // <-- Flex positioning (see API)
+    paddingHorizontal: 's', // <-- size name
+    marginVertical: 'm', // <-- size name
+    marginLeft: 'l', // <-- size name
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     color: 'onPrimary', // <-- color name
-    pl: 'l', // <-- `paddingLeft` shorthand + size name
+    paddingLeft: 'l', // <-- size name
   },
 });
 
@@ -82,7 +84,7 @@ const $ = createVariants(
   {
     borderRadius: 'roundness',
     borderWidth: 1,
-    p: 'm',
+    padding: 'm',
   },
   // variants
   {
@@ -105,7 +107,7 @@ const $ = createVariants(
       opacity: 0.75,
     },
     compact: {
-      p: 's',
+      padding: 's',
     },
   },
 );
@@ -277,86 +279,63 @@ const Title = createBox<TextProps>(Text);
 createStyles(styles: Record<string, Style>)
 ```
 
-A `Style` accepts all normal `react-native` style properties as well as `FlexStyle` & `SpacingStyle` properties:
+Theme size mapping is available on longhand spacing properties only:
 
 ```ts
-type FlexStyle = {
-  col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  row?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-};
-
-type SpacingStyle<S extends Sizes> = Partial<Record<SpacingProp, keyof S>>;
+type SpacingStyle<S extends Sizes> = Partial<
+  Record<
+    | 'margin'
+    | 'marginTop'
+    | 'marginRight'
+    | 'marginBottom'
+    | 'marginLeft'
+    | 'marginHorizontal'
+    | 'marginVertical'
+    | 'marginStart'
+    | 'marginEnd'
+    | 'padding'
+    | 'paddingTop'
+    | 'paddingRight'
+    | 'paddingBottom'
+    | 'paddingLeft'
+    | 'paddingHorizontal'
+    | 'paddingVertical'
+    | 'paddingStart'
+    | 'paddingEnd'
+    | 'gap'
+    | 'columnGap'
+    | 'rowGap',
+    keyof S
+  >
+>;
 ```
 
-The following "color" properties will only accepts color names from the Theme:
+The following "color" properties only accept color names from the Theme:
 
 - `backgroundColor`
 - `borderColor`
 - `color`
 - `tintColor`
 
-Finally `borderRadius` accepts both a size name from the Theme, as well as a normal `number` value.
+The following "size" properties only accept size names from the Theme:
+
+- `borderRadius`
+- any property from `SpacingStyle` above
 
 ```ts
 import { createStyles } from './theme';
 
 const $ = createStyles({
   card: {
-    col: 5,
     backgroundColor: 'primary',
-    borderRadius: 'roundness', // | 100
-    p: 'm',
+    borderRadius: 'roundness',
+    padding: 'm',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 ```
-
-#### Note about `FlexStyle`
-
-A `FlexStyle` is a shorthand describing Flexbox properties.
-
-It's based on the clever "dial" idea initially brought by [`react-native-row`](https://github.com/hyrwork/react-native-row).
-
-Basically you can think of a Flex container as a dial number pad:
-
-```
-┌─────────────┐
-│ 1    2    3 │
-│             │
-│ 4    5    6 │
-│             │
-│ 7    8    9 │
-└─────────────┘
-```
-
-And when creating styles using the `{ (col|row): [1-9] }` shorthand, it will generate the corresponding Flexbox style:
-
-```ts
-const $ = createStyles({
-  colC: {
-    col: 5,
-  },
-  // $.colC = { flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }
-
-  rowBR: {
-    row: 9,
-  },
-  // $.rowL = { flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'flex-end' }
-
-  rowLR: {
-    row: 4,
-    justifyContent: 'space-between',
-  },
-  // $.rowLR = { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }
-
-  colLRB: {
-    col: 8,
-    alignItems: 'stretch',
-  },
-  // $.colLRB = { flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'stretch' }
-});
-```
-
-For an even more semantic way to express Flexbox positioning, check out [`react-native-col`](https://github.com/eightyfive/react-native-col).
 
 ### `Theme.createVariants(defaults, variants, modifiers)`
 

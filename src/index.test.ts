@@ -1,5 +1,8 @@
 import { createTheme } from './index';
 
+type ExpectTrue<T extends true> = T;
+type ExpectFalse<T extends false> = T;
+
 const { colors, createStyles, createVariants, sizes } = createTheme(
   {
     primary: 'black',
@@ -24,27 +27,32 @@ test('createStyles', () => {
     box: {
       backgroundColor: 'primary',
       borderColor: 'accent',
-      px: 's',
-      my: 'm',
-      marginLeft: 30,
-      col: 5,
+      paddingHorizontal: 's',
+      marginVertical: 'm',
+      marginLeft: 'l',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     row: {
-      mt: 'l',
-      row: 8,
+      marginTop: 'l',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
       borderRadius: 'roundness',
     },
     text: {
       backgroundColor: 'accent',
       color: 'onAccent',
-      mb: 'l',
+      marginBottom: 'l',
     },
     error: {
       backgroundColor: 'negative',
       color: 'positive',
     },
     colLRB: {
-      col: 8,
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
       alignItems: 'stretch',
     },
     image: {
@@ -57,7 +65,7 @@ test('createStyles', () => {
     borderColor: colors.accent,
     paddingHorizontal: sizes.s,
     marginVertical: sizes.m,
-    marginLeft: 30,
+    marginLeft: sizes.l,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,13 +95,46 @@ test('createStyles', () => {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
   });
+
+  type BoxHasNoTintColor = ExpectFalse<
+    'tintColor' extends keyof typeof $.box ? true : false
+  >;
+  type BoxHasNoFontSize = ExpectFalse<
+    'fontSize' extends keyof typeof $.box ? true : false
+  >;
+  type TextHasNoTintColor = ExpectFalse<
+    'tintColor' extends keyof typeof $.text ? true : false
+  >;
+  type TextHasFontSize = ExpectTrue<
+    'fontSize' extends keyof typeof $.text ? true : false
+  >;
+  type ImageHasTintColor = ExpectTrue<
+    'tintColor' extends keyof typeof $.image ? true : false
+  >;
+  type ImageHasResizeMode = ExpectTrue<
+    'resizeMode' extends keyof typeof $.image ? true : false
+  >;
+
+  const _boxHasNoTintColor: BoxHasNoTintColor = false;
+  const _boxHasNoFontSize: BoxHasNoFontSize = false;
+  const _textHasNoTintColor: TextHasNoTintColor = false;
+  const _textHasFontSize: TextHasFontSize = true;
+  const _imageHasTintColor: ImageHasTintColor = true;
+  const _imageHasResizeMode: ImageHasResizeMode = true;
+
+  expect(_boxHasNoTintColor).toBe(false);
+  expect(_boxHasNoFontSize).toBe(false);
+  expect(_textHasNoTintColor).toBe(false);
+  expect(_textHasFontSize).toBe(true);
+  expect(_imageHasTintColor).toBe(true);
+  expect(_imageHasResizeMode).toBe(true);
 });
 
 test('createVariants', () => {
   const $ = createVariants(
     {
       borderWidth: 1,
-      p: 'm',
+      padding: 'm',
     },
     {
       primary: {
@@ -114,7 +155,7 @@ test('createVariants', () => {
         opacity: 0.75,
       },
       compact: {
-        p: 's',
+        padding: 's',
       },
     },
   );
@@ -142,4 +183,25 @@ test('createVariants', () => {
       borderColor: colors.accent,
     },
   ]);
+});
+
+createStyles({
+  invalid: {
+    // @ts-expect-error Shorthand props are not supported in createStyles.
+    p: 'm',
+  },
+});
+
+createStyles({
+  invalidBorderRadius: {
+    // @ts-expect-error borderRadius only accepts a size name.
+    borderRadius: 10,
+  },
+});
+
+createStyles({
+  invalidColor: {
+    // @ts-expect-error color only accepts a theme color name.
+    color: '#fff',
+  },
 });

@@ -1,3 +1,5 @@
+import React from 'react';
+import { Text } from 'react-native';
 import { createTheme } from './index';
 
 type ExpectTrue<T extends true> = T;
@@ -114,6 +116,14 @@ test('createStyles', () => {
   type ImageHasResizeMode = ExpectTrue<
     'resizeMode' extends keyof typeof $.image ? true : false
   >;
+  const addressStyle = createStyles({
+    address: {
+      flex: 1,
+    },
+  }).address;
+  type AddressHasNoBackfaceVisibility = ExpectFalse<
+    'backfaceVisibility' extends keyof typeof addressStyle ? true : false
+  >;
 
   const _boxHasNoTintColor: BoxHasNoTintColor = false;
   const _boxHasNoFontSize: BoxHasNoFontSize = false;
@@ -121,6 +131,10 @@ test('createStyles', () => {
   const _textHasFontSize: TextHasFontSize = true;
   const _imageHasTintColor: ImageHasTintColor = true;
   const _imageHasResizeMode: ImageHasResizeMode = true;
+  const _addressHasNoBackfaceVisibility: AddressHasNoBackfaceVisibility = false;
+  const _addressTextElement = React.createElement(Text, {
+    style: addressStyle,
+  });
 
   expect(_boxHasNoTintColor).toBe(false);
   expect(_boxHasNoFontSize).toBe(false);
@@ -128,6 +142,9 @@ test('createStyles', () => {
   expect(_textHasFontSize).toBe(true);
   expect(_imageHasTintColor).toBe(true);
   expect(_imageHasResizeMode).toBe(true);
+  expect(_addressHasNoBackfaceVisibility).toBe(false);
+  expect(_addressTextElement).toBeTruthy();
+  expect(addressStyle).toEqual({ flex: 1 });
 });
 
 test('createVariants', () => {

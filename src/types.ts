@@ -162,7 +162,20 @@ type InferredOutputNamedStyle<
     : RNImageStyle
   : HasMatchingKey<T, TextOnlyStyleKey<S, C>> extends true
   ? RNTextStyle
-  : RNViewStyle;
+  : OutputSharedNamedStyle<T>;
+
+type OutputStyleValue<
+  K extends PropertyKey,
+  V,
+> = K extends ThemeColorProp
+  ? ColorValue
+  : K extends ThemeSizeProp
+  ? number
+  : V;
+
+type OutputSharedNamedStyle<T extends object> = {
+  [P in keyof T]: OutputStyleValue<P, T[P]>;
+};
 
 type OutputNamedStyle<
   S extends Sizes,

@@ -52,8 +52,8 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
   sizes: S,
   colors: C,
 ) {
-  return function createStyles<T extends AnyNamedStyles<S, C>>(
-    styles: T,
+  return function createStyles<T extends Record<string, object>>(
+    styles: AnyNamedStyles<S, C, T>,
   ): OutputNamedStyles<S, C, T> {
     const mapped: { [P in keyof T]: RNStyle } = {} as {
       [P in keyof T]: RNStyle;

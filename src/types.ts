@@ -119,6 +119,22 @@ export type Style<S extends Sizes, C extends Colors> =
   | TextStyle<S, C>
   | ImageStyle<S, C>;
 
+type StyleKey<S extends Sizes, C extends Colors> =
+  | keyof ViewStyle<S, C>
+  | keyof TextStyle<S, C>
+  | keyof ImageStyle<S, C>;
+
+type KnownStyleKeys<S extends Sizes, C extends Colors, T extends object> = {
+  [P in Exclude<keyof T, StyleKey<S, C>>]: never;
+};
+
+export type NamedStyle<S extends Sizes, C extends Colors, T extends object> =
+  Exclude<keyof T, StyleKey<S, C>> extends never
+    ? T extends Style<S, C>
+      ? T
+      : Style<S, C>
+    : T & KnownStyleKeys<S, C, T>;
+
 type HasMatchingKey<T, K extends PropertyKey> = Extract<
   keyof T,
   K
@@ -154,10 +170,13 @@ type OutputNamedStyle<
   T extends object,
 > = T extends object ? InferredOutputNamedStyle<S, C, T> : never;
 
-export type AnyNamedStyles<S extends Sizes, C extends Colors> = Record<
-  string,
-  Style<S, C>
->;
+export type AnyNamedStyles<
+  S extends Sizes,
+  C extends Colors,
+  T extends Record<string, object>,
+> = {
+  [P in keyof T]: NamedStyle<S, C, T[P]>;
+};
 
 export type OutputNamedStyles<
   S extends Sizes,

@@ -185,23 +185,32 @@ test('createVariants', () => {
   ]);
 });
 
-createStyles({
-  invalid: {
-    // @ts-expect-error Shorthand props are not supported in createStyles.
-    p: 'm',
-  },
-});
+if (false) {
+  createStyles({
+    invalidUnknownProp: {
+      // @ts-expect-error Unknown style props are not supported in createStyles.
+      paaa: 'm',
+    },
+  });
 
-createStyles({
-  invalidBorderRadius: {
-    // @ts-expect-error borderRadius only accepts a size name.
-    borderRadius: 10,
-  },
-});
+  createStyles({
+    invalid: {
+      // @ts-expect-error Shorthand props are not supported in createStyles.
+      p: 'm',
+    },
+  });
 
-createStyles({
-  invalidColor: {
-    // @ts-expect-error color only accepts a theme color name.
-    color: '#fff',
-  },
-});
+  createStyles({
+    invalidBorderRadius: {
+      // @ts-expect-error borderRadius only accepts a size name.
+      borderRadius: 10,
+    },
+  });
+
+  createStyles({
+    invalidColor: {
+      // @ts-expect-error color only accepts a theme color name.
+      color: '#fff',
+    },
+  });
+}

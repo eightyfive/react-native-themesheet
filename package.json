@@ -18,7 +18,7 @@
   "scripts": {
     "build": "rimraf dist && tsc -p .",
     "build-lint": "tsc --noEmit",
-    "test": "jest src/",
+    "test": "npm run build-lint && jest src/",
     "release": "np"
   },
   "files": [

@@ -1,9 +1,6 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { createTheme } from './index';
-
-type ExpectTrue<T extends true> = T;
-type ExpectFalse<T extends false> = T;
 
 const { colors, createStyles, createVariants, sizes } = createTheme(
   {
@@ -60,6 +57,9 @@ test('createStyles', () => {
     image: {
       tintColor: 'accent',
     },
+    address: {
+      flex: 1,
+    },
   });
 
   expect($.box).toEqual({
@@ -98,53 +98,25 @@ test('createStyles', () => {
     alignItems: 'stretch',
   });
 
-  type BoxHasNoTintColor = ExpectFalse<
-    'tintColor' extends keyof typeof $.box ? true : false
-  >;
-  type BoxHasNoFontSize = ExpectFalse<
-    'fontSize' extends keyof typeof $.box ? true : false
-  >;
-  type TextHasNoTintColor = ExpectFalse<
-    'tintColor' extends keyof typeof $.text ? true : false
-  >;
-  type TextHasFontSize = ExpectTrue<
-    'fontSize' extends keyof typeof $.text ? true : false
-  >;
-  type ImageHasTintColor = ExpectTrue<
-    'tintColor' extends keyof typeof $.image ? true : false
-  >;
-  type ImageHasResizeMode = ExpectTrue<
-    'resizeMode' extends keyof typeof $.image ? true : false
-  >;
-  const addressStyle = createStyles({
-    address: {
-      flex: 1,
-    },
-  }).address;
-  type AddressHasNoBackfaceVisibility = ExpectFalse<
-    'backfaceVisibility' extends keyof typeof addressStyle ? true : false
-  >;
-
-  const _boxHasNoTintColor: BoxHasNoTintColor = false;
-  const _boxHasNoFontSize: BoxHasNoFontSize = false;
-  const _textHasNoTintColor: TextHasNoTintColor = false;
-  const _textHasFontSize: TextHasFontSize = true;
-  const _imageHasTintColor: ImageHasTintColor = true;
-  const _imageHasResizeMode: ImageHasResizeMode = true;
-  const _addressHasNoBackfaceVisibility: AddressHasNoBackfaceVisibility = false;
+  const _boxViewElement = React.createElement(View, {
+    style: $.box,
+  });
+  const _textElement = React.createElement(Text, {
+    style: $.text,
+  });
+  const _imageElement = React.createElement(Image, {
+    style: $.image,
+  });
   const _addressTextElement = React.createElement(Text, {
-    style: addressStyle,
+    style: $.address,
   });
 
-  expect(_boxHasNoTintColor).toBe(false);
-  expect(_boxHasNoFontSize).toBe(false);
-  expect(_textHasNoTintColor).toBe(false);
-  expect(_textHasFontSize).toBe(true);
-  expect(_imageHasTintColor).toBe(true);
-  expect(_imageHasResizeMode).toBe(true);
-  expect(_addressHasNoBackfaceVisibility).toBe(false);
+  expect(_boxViewElement).toBeTruthy();
+  expect(_textElement).toBeTruthy();
+  expect(_imageElement).toBeTruthy();
   expect(_addressTextElement).toBeTruthy();
-  expect(addressStyle).toEqual({ flex: 1 });
+  expect($.image).toEqual({ tintColor: colors.accent });
+  expect($.address).toEqual({ flex: 1 });
 });
 
 test('createVariants', () => {

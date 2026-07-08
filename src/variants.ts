@@ -2,7 +2,6 @@ import {
   AnyNamedStyles,
   Colors,
   NamedStyle,
-  OutputNamedStyles,
   RNStyle,
   Sizes,
 } from './types';
@@ -10,7 +9,7 @@ import {
 export function createVariantsFactory<S extends Sizes, C extends Colors>(
   createStyles: <T extends Record<string, object>>(
     styles: AnyNamedStyles<S, C, T>,
-  ) => OutputNamedStyles<S, C, T>,
+  ) => { [P in keyof T]: RNStyle },
 ) {
   return function createVariants<
     D extends object,
@@ -33,11 +32,14 @@ export function createVariantsFactory<S extends Sizes, C extends Colors>(
       variant: keyof typeof vStyles,
       modifier: Partial<Record<keyof typeof mStyles, boolean>>,
     ) {
-      const styles: RNStyle[] = [dStyles.defaults, vStyles[variant]];
+      const styles: RNStyle[] = [
+        dStyles.defaults as RNStyle,
+        vStyles[variant] as RNStyle,
+      ];
 
       for (let mod in modifier) {
         if (modifier[mod]) {
-          styles.push(mStyles[mod]);
+          styles.push(mStyles[mod] as RNStyle);
         }
       }
 

@@ -128,60 +128,31 @@ type KnownStyleKeys<S extends Sizes, C extends Colors, T extends object> = {
   [P in Exclude<keyof T, StyleKey<S, C>>]: never;
 };
 
-export type NamedStyle<S extends Sizes, C extends Colors, T extends object> =
-  Exclude<keyof T, StyleKey<S, C>> extends never
-    ? T extends Style<S, C>
-      ? T
-      : Style<S, C>
-    : T & KnownStyleKeys<S, C, T>;
-
-type HasMatchingKey<T, K extends PropertyKey> = Extract<
-  keyof T,
-  K
-> extends never
-  ? false
-  : true;
-
-type TextOnlyStyleKey<S extends Sizes, C extends Colors> = Exclude<
-  keyof TextStyle<S, C>,
-  keyof ViewStyle<S, C> | keyof ImageStyle<S, C>
->;
-
-type ImageOnlyStyleKey<S extends Sizes, C extends Colors> = Exclude<
-  keyof ImageStyle<S, C>,
-  keyof ViewStyle<S, C> | keyof TextStyle<S, C>
->;
-
-type InferredOutputNamedStyle<
+export type NamedStyle<
   S extends Sizes,
   C extends Colors,
   T extends object,
-> = HasMatchingKey<T, ImageOnlyStyleKey<S, C>> extends true
-  ? HasMatchingKey<T, TextOnlyStyleKey<S, C>> extends true
-    ? never
-    : RNImageStyle
-  : HasMatchingKey<T, TextOnlyStyleKey<S, C>> extends true
-  ? RNTextStyle
-  : OutputSharedNamedStyle<T>;
+> = Exclude<keyof T, StyleKey<S, C>> extends never
+  ? T extends Style<S, C>
+    ? T
+    : Style<S, C>
+  : T & KnownStyleKeys<S, C, T>;
 
-type OutputStyleValue<
-  K extends PropertyKey,
-  V,
-> = K extends ThemeColorProp
+type OutputStyleValue<K extends PropertyKey, V> = K extends ThemeColorProp
   ? ColorValue
   : K extends ThemeSizeProp
   ? number
+  : K extends keyof RNTextStyle
+  ? RNTextStyle[K]
+  : K extends keyof RNImageStyle
+  ? RNImageStyle[K]
+  : K extends keyof RNViewStyle
+  ? RNViewStyle[K]
   : V;
 
 type OutputSharedNamedStyle<T extends object> = {
   [P in keyof T]: OutputStyleValue<P, T[P]>;
 };
-
-type OutputNamedStyle<
-  S extends Sizes,
-  C extends Colors,
-  T extends object,
-> = T extends object ? InferredOutputNamedStyle<S, C, T> : never;
 
 export type AnyNamedStyles<
   S extends Sizes,
@@ -191,14 +162,8 @@ export type AnyNamedStyles<
   [P in keyof T]: NamedStyle<S, C, T[P]>;
 };
 
-export type OutputNamedStyles<
-  S extends Sizes,
-  C extends Colors,
-  T extends Record<string, object>,
-> = {
-  [P in keyof T]: OutputNamedStyle<S, C, T[P]>;
+export type OutputNamedStyles<T extends Record<string, object>> = {
+  [P in keyof T]: OutputSharedNamedStyle<T[P]>;
 };
 
-export type BoxProps<S extends Sizes> = {
-  [Key in SpacingProp]?: keyof S;
-};
+export type BoxProps<S extends Sizes> = Partial<Record<SpacingProp, keyof S>>;

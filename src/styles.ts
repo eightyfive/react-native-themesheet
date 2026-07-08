@@ -54,7 +54,7 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
 ) {
   return function createStyles<T extends Record<string, object>>(
     styles: AnyNamedStyles<S, C, T>,
-  ): OutputNamedStyles<S, C, T> {
+  ): OutputNamedStyles<T> {
     const mapped: { [P in keyof T]: RNStyle } = {} as {
       [P in keyof T]: RNStyle;
     };
@@ -90,6 +90,6 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
       mapped[styleKey] = style as RNStyle;
     }
 
-    return StyleSheet.create(mapped) as OutputNamedStyles<S, C, T>;
+    return StyleSheet.create(mapped) as OutputNamedStyles<T>;
   };
 }

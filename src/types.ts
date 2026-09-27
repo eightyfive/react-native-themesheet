@@ -66,6 +66,20 @@ export type SpacingStyle<S extends Sizes> = Partial<
 >;
 
 export type ThemeColorProp =
+  | 'borderTopColor'
+  | 'borderRightColor'
+  | 'borderBottomColor'
+  | 'borderLeftColor'
+  | 'borderStartColor'
+  | 'borderEndColor'
+  | 'borderBlockColor'
+  | 'borderBlockStartColor'
+  | 'borderBlockEndColor'
+  | 'shadowColor'
+  | 'textShadowColor'
+  | 'textDecorationColor'
+  | 'overlayColor'
+  | 'outlineColor'
   | 'backgroundColor'
   | 'borderColor'
   | 'color'
@@ -73,43 +87,27 @@ export type ThemeColorProp =
 
 export type ThemeSizeProp = SpacingName | 'borderRadius';
 
+type ThemeColors<C extends Colors> = Partial<Record<ThemeColorProp, keyof C>>;
+
 export interface ViewStyle<S extends Sizes, C extends Colors>
   extends SpacingStyle<S>,
-    Omit<
-      RNViewStyle,
-      'backgroundColor' | 'borderColor' | 'borderRadius' | SpacingName
-    > {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
+    ThemeColors<C>,
+    Omit<RNViewStyle, ThemeColorProp | 'borderRadius' | SpacingName> {
   borderRadius?: keyof S;
 }
 
 export interface TextStyle<S extends Sizes, C extends Colors>
   extends SpacingStyle<S>,
-    Omit<
-      RNTextStyle,
-      'backgroundColor' | 'borderColor' | 'borderRadius' | 'color' | SpacingName
-    > {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
+    ThemeColors<C>,
+    Omit<RNTextStyle, ThemeColorProp | 'borderRadius' | SpacingName> {
   borderRadius?: keyof S;
-  color?: keyof C;
 }
 
 export interface ImageStyle<S extends Sizes, C extends Colors>
   extends SpacingStyle<S>,
-    Omit<
-      RNImageStyle,
-      | 'backgroundColor'
-      | 'borderColor'
-      | 'borderRadius'
-      | 'tintColor'
-      | SpacingName
-    > {
-  backgroundColor?: keyof C;
-  borderColor?: keyof C;
+    ThemeColors<C>,
+    Omit<RNImageStyle, ThemeColorProp | 'borderRadius' | SpacingName> {
   borderRadius?: keyof S;
-  tintColor?: keyof C;
 }
 
 export type RNStyle = RNViewStyle | RNTextStyle | RNImageStyle;

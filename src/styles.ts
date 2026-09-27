@@ -10,6 +10,20 @@ import {
 } from './types';
 
 const colorProps: Record<ThemeColorProp, true> = {
+  borderTopColor: true,
+  borderRightColor: true,
+  borderBottomColor: true,
+  borderLeftColor: true,
+  borderStartColor: true,
+  borderEndColor: true,
+  borderBlockColor: true,
+  borderBlockStartColor: true,
+  borderBlockEndColor: true,
+  shadowColor: true,
+  textShadowColor: true,
+  textDecorationColor: true,
+  overlayColor: true,
+  outlineColor: true,
   backgroundColor: true,
   borderColor: true,
   color: true,
@@ -68,7 +82,9 @@ export function createStylesFactory<S extends Sizes, C extends Colors>(
         const value = aliases[alias];
 
         if (hasProp(colorProps, alias)) {
-          const color = colors[value as keyof typeof colors];
+          const color = hasProp(colors, value as PropertyKey)
+            ? colors[value as keyof typeof colors]
+            : undefined;
 
           if (color !== undefined) {
             style[alias] = color;

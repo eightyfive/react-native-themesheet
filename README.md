@@ -317,6 +317,14 @@ The following "color" properties only accept color names from the Theme:
 - `color`
 - `tintColor`
 
+All other top-level color properties also only accept theme color names: `borderTopColor`,
+`borderRightColor`, `borderBottomColor`, `borderLeftColor`, `borderStartColor`,
+`borderEndColor`, `borderBlockColor`, `borderBlockStartColor`, `borderBlockEndColor`,
+`shadowColor`, `textShadowColor`, `textDecorationColor`, `overlayColor`, and
+`outlineColor`. Declare literal colors (including platform colors) in the theme
+and reference them by name. Literal values and unknown theme names are rejected
+by TypeScript; unchecked invalid values are omitted with a warning in development.
+
 The following "size" properties only accept size names from the Theme:
 
 - `borderRadius`
